@@ -31,18 +31,9 @@ public class GameWindow
 	static float opacity = 0;
 	public void displayCurrentFrame(boolean fade)
 	{
-		if(!fade)
-		{
-			frames.get(currFrame).setVisible(true);
-			
-			for(GameFrame frame : frames)
-				if(frame != frames.get(currFrame))
-					frame.setVisible(false);
-			
-			return;
-		}
-		
 		opacity = 0;
+		if(!fade)
+			opacity = 1;
 		
 		JFrame tempBackgroundFrame = new JFrame();
 		tempBackgroundFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -62,7 +53,7 @@ public class GameWindow
 
 			public void actionPerformed(ActionEvent e)
 			{
-				if(opacity > 1.0f)
+				if(opacity >= 1.0f)
 				{
 					timer.setRepeats(false);
 					frames.get(currFrame).setOpacity(1);
@@ -76,7 +67,7 @@ public class GameWindow
 					return;
 				}
 				
-				opacity += (10.0 / 1000);
+				opacity += (10.0 / 600);
 				frames.get(currFrame).setOpacity(Math.min(opacity, 1.0f));
 				
 				for(GameFrame frame : frames)

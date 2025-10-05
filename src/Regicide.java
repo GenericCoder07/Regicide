@@ -99,7 +99,7 @@ public class Regicide
 			public void actionPerformed(ActionEvent e)
 			{
 				win.setCurrentFrame(win.nameMap.get("singleplayer"));
-				win.displayCurrentFrame(false);
+				win.displayCurrentFrame(true);
 			}
 			
 		});
