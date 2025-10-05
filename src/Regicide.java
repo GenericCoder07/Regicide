@@ -25,14 +25,19 @@ class Screen
 public class Regicide
 {
 	private static Color elemPrimary = Color.getHSBColor(0.65f, 0.65f, 0.95f);
-	private static Color elemSecondary = Color.getHSBColor(0.125f, 0.78f, 0.95f);
-	private static Color elemCancel = Color.getHSBColor(0.0f, 0.85f, 0.80f);
 	private static Color elemPrimaryDark = Color.getHSBColor(0.65f, 0.65f, 0.65f);
+	
+	private static Color elemSecondary = Color.getHSBColor(0.125f, 0.78f, 0.95f);
 	private static Color elemSecondaryDark = Color.getHSBColor(0.65f, 0.25f, 0.65f);
+	
+	private static Color elemCancel = Color.getHSBColor(0.0f, 0.85f, 0.80f);
+	private static Color elemCancelDark = Color.getHSBColor(0.0f, 0.85f, 0.50f);
+	
 	private static Color elemTertiary = Color.getHSBColor(0.125f, 0.25f, 0.95f);
 	private static Color elemTertiaryDark = Color.getHSBColor(0.125f, 0.25f, 0.65f);
-	private static Color elemCancelDark = Color.getHSBColor(0.0f, 0.85f, 0.50f);
-	private static Color bg = Color.getHSBColor(0.65f, 0.85f, 0.30f);
+	
+	public static Color bg = Color.getHSBColor(0.65f, 0.85f, 0.30f);
+	
 	public static GameWindow win;
 	public static void main(String[] args)
 	{
@@ -49,13 +54,14 @@ public class Regicide
 		win = new GameWindow();
 		initWindowFrames();
 		win.setCurrentFrame(0);
-		win.displayCurrentFrame();
+		win.displayCurrentFrame(true);
 	}
 
 	private static void initWindowFrames()
 	{
 		createTitleFrame();
 		createSinglePlayerFrame();
+		createOptionsFrame();
 	}
 	
 	private static void createTitleFrame()
@@ -80,7 +86,7 @@ public class Regicide
 		} catch (Exception e)
 		{
 		}
-		startButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		startButton.setSize(getMult(0.15, Screen.width), getMult(0.15 * 0.3, Screen.width));
 		startButton.setLocation((getMult(0.5, Screen.width) - startButton.getWidth() / 2), getMult(0.5, Screen.height));
 		startButton.setBackground(elemPrimary);
 		startButton.setButtonText("Singleplayer");
@@ -93,7 +99,7 @@ public class Regicide
 			public void actionPerformed(ActionEvent e)
 			{
 				win.setCurrentFrame(win.nameMap.get("singleplayer"));
-				win.displayCurrentFrame();
+				win.displayCurrentFrame(false);
 			}
 			
 		});
@@ -108,8 +114,8 @@ public class Regicide
 		} catch (Exception e)
 		{
 		}
-		multiplayerButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
-		multiplayerButton.setLocation((getMult(0.5, Screen.width) - multiplayerButton.getWidth() / 2), getMult(0.65, Screen.height));
+		multiplayerButton.setSize(getMult(0.15, Screen.width), getMult(0.15 * 0.3, Screen.width));
+		multiplayerButton.setLocation((getMult(0.5, Screen.width) - multiplayerButton.getWidth() / 2), getMult(0.62, Screen.height));
 		multiplayerButton.setBackground(elemTertiary);
 		multiplayerButton.setButtonText("Multiplayer");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
@@ -119,6 +125,34 @@ public class Regicide
 		titleFrame.add(multiplayerButton);
 		
 		
+		UIButton optionsButton = null;
+		try
+		{
+			optionsButton = new UIButton(elemPrimaryDark);
+		} catch (Exception e)
+		{
+		}
+		optionsButton.setSize(getMult(0.15, Screen.width), getMult(0.15 * 0.3, Screen.width));
+		optionsButton.setLocation((getMult(0.5, Screen.width) - optionsButton.getWidth() / 2), getMult(0.74, Screen.height));
+		optionsButton.setBackground(elemPrimary);
+		optionsButton.setButtonText("Options");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		optionsButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		optionsButton.setForeground(elemSecondary);
+		
+		optionsButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				win.setCurrentFrame(win.nameMap.get("options"));
+				win.displayCurrentFrame(true);
+			}
+			
+		});
+		
+		titleFrame.add(optionsButton);
+		
+		
 		UIButton quitButton = null;
 		try
 		{
@@ -126,8 +160,8 @@ public class Regicide
 		} catch (Exception e)
 		{
 		}
-		quitButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
-		quitButton.setLocation((getMult(0.5, Screen.width) - quitButton.getWidth() / 2), getMult(0.8, Screen.height));
+		quitButton.setSize(getMult(0.15, Screen.width), getMult(0.15 * 0.3, Screen.width));
+		quitButton.setLocation((getMult(0.5, Screen.width) - quitButton.getWidth() / 2), getMult(0.86, Screen.height));
 		quitButton.setBackground(elemCancel);
 		quitButton.setButtonText("Quit");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
@@ -154,7 +188,100 @@ public class Regicide
 		
 		singleplayerFrame.getContentPane().setBackground(bg);
 		
+		UIButton newGameButton = null;
+		try
+		{
+			newGameButton = new UIButton(elemPrimaryDark);
+		} catch (Exception e)
+		{
+		}
+		newGameButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		newGameButton.setLocation((getMult(0.65, Screen.width - newGameButton.getWidth())), getMult(0.45, Screen.height));
+		newGameButton.setBackground(elemPrimary);
+		newGameButton.setButtonText("Start a New Game");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		newGameButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		newGameButton.setForeground(elemSecondary);
+		
+		newGameButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				//win.setCurrentFrame(win.nameMap.get("singleplayer"));
+				//win.displayCurrentFrame();
+			}
+			
+		});
+		
+		singleplayerFrame.add(newGameButton);
+		
+		
+		UIButton tutorialButton = null;
+		try
+		{
+			tutorialButton = new UIButton(elemPrimaryDark);
+		} catch (Exception e)
+		{
+		}
+		tutorialButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		tutorialButton.setLocation((getMult(0.35, Screen.width - tutorialButton.getWidth())), getMult(0.45, Screen.height));
+		tutorialButton.setBackground(elemPrimary);
+		tutorialButton.setButtonText("Tutorial");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		tutorialButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		tutorialButton.setForeground(elemSecondary);
+		
+		tutorialButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				//win.setCurrentFrame(win.nameMap.get("singleplayer"));
+				//win.displayCurrentFrame();
+			}
+			
+		});
+		
+		singleplayerFrame.add(tutorialButton);
+		
+		
+		UIButton backButton = null;
+		try
+		{
+			backButton = new UIButton(elemCancelDark);
+		} catch (Exception e)
+		{
+		}
+		backButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		backButton.setLocation((getMult(0.5, Screen.width - backButton.getWidth())), getMult(0.7, Screen.height));
+		backButton.setBackground(elemCancel);
+		backButton.setButtonText("Back to Main Menu");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		backButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		backButton.setForeground(elemSecondary);
+		
+		backButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				win.setCurrentFrame(win.nameMap.get("main"));
+				win.displayCurrentFrame(true);
+			}
+			
+		});
+		
+		singleplayerFrame.add(backButton);
+		
+		
 		win.addFrame(singleplayerFrame);
+	}
+	
+	private static void createOptionsFrame()
+	{
+		GameFrame optionsFrame = new GameFrame("options");
+		
+		optionsFrame.getContentPane().setBackground(bg);
+		
+		win.addFrame(optionsFrame);
 	}
 
 	private static Image getAsset(String filePath)
