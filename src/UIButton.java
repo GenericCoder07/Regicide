@@ -15,6 +15,7 @@ public class UIButton extends JLabel
 {
 	private Color shadow;
 	private double buttonDeflection = 0;
+	private double desiredPosition = 1;
 	private ActionListener listener;
 	private boolean hovering = false;
 	private double pressMult = 0.6;
@@ -34,6 +35,8 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
+				desiredPosition = 0;
+				
 				a = new Animation(120) {
 
 					public double function(double currTime)
@@ -43,7 +46,7 @@ public class UIButton extends JLabel
 
 					public void action(double currTime)
 					{
-						buttonDeflection = getHeight() * .2 * pressMult * currTime;
+						buttonDeflection = getHeight() * .2 * (pressMult * (1- desiredPosition)) * currTime;
 						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
@@ -54,6 +57,8 @@ public class UIButton extends JLabel
 
 			public void mouseReleased(MouseEvent e)
 			{
+				desiredPosition = 1;
+				
 				a = new Animation(240) {
 
 					public double function(double currTime)
@@ -77,6 +82,25 @@ public class UIButton extends JLabel
 
 			public void mouseEntered(MouseEvent e)
 			{
+				desiredPosition = 0.7;
+				
+				a = new Animation(120) {
+
+					public double function(double currTime)
+					{
+						return easeOutHardStop(currTime);
+					}
+
+					public void action(double currTime)
+					{
+						buttonDeflection = getHeight() * .2 * (pressMult * (1 - desiredPosition)) * currTime;
+						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+						repaint();
+					}
+					
+				};
+				a.start();
+				
 				float[] f = Color.RGBtoHSB(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), null);
 				setBackground(Color.getHSBColor(f[0], f[1], f[2] * 4 / 5));
 				hovering = true;
@@ -84,6 +108,30 @@ public class UIButton extends JLabel
 
 			public void mouseExited(MouseEvent e)
 			{
+				if(desiredPosition > 0.5)
+				{	
+					System.out.println("I got here ");
+					
+					desiredPosition = 1;
+				
+					a = new Animation(240) {
+	
+						public double function(double currTime)
+						{
+							return 1-easeOutBounceInertia(currTime);
+						}
+	
+						public void action(double currTime)
+						{
+							buttonDeflection = getHeight() * .2 * (pressMult * (1- desiredPosition)) * currTime;
+							System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+							repaint();
+						}
+						
+					};
+					a.start();
+				}
+				
 				float[] f = Color.RGBtoHSB(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), null);
 				setBackground(Color.getHSBColor(f[0], f[1], f[2] * 5 / 4));
 				hovering = false;
