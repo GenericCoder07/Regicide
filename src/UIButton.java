@@ -36,6 +36,8 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
+	            Regicide.sp.play("sfx/press.wav", 0.9,  0.0);
+				
 				currentPosition = desiredPosition;
 				desiredPosition = pressMult;
 				
@@ -62,6 +64,8 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
+	            Regicide.sp.play("sfx/release.wav", 0.9,  0.0);
+	            
 				currentPosition = desiredPosition;
 				System.out.println("current pos " + currentPosition);
 				
@@ -101,6 +105,7 @@ public class UIButton extends JLabel
 			{
 				currentPosition = desiredPosition;
 				desiredPosition = 0.3;
+	            Regicide.sp.play("sfx/hover-press.wav", 0.9,  0.0);
 				
 				a = new Animation(120) {
 

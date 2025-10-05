@@ -39,6 +39,9 @@ public class Regicide
 	public static Color bg = Color.getHSBColor(0.65f, 0.85f, 0.30f);
 	
 	public static GameWindow win;
+	
+	public static SoundPlayer sp = new SoundPlayer(32, null, true);
+	
 	public static void main(String[] args)
 	{
 		init();
@@ -47,6 +50,22 @@ public class Regicide
 	private static void init()
 	{
 		initWindow();
+		initSoundPlayer();
+	}
+
+	private static void initSoundPlayer()
+	{
+		try
+		{
+			sp.load("sfx/press.wav");
+			sp.load("sfx/hover-press.wav");
+			sp.load("sfx/release.wav");
+		} 
+		catch (Exception e)
+		{
+			
+		}
+        
 	}
 
 	private static void initWindow()
@@ -280,6 +299,33 @@ public class Regicide
 		GameFrame optionsFrame = new GameFrame("options");
 		
 		optionsFrame.getContentPane().setBackground(bg);
+		
+		UIButton backButton = null;
+		try
+		{
+			backButton = new UIButton(elemCancelDark);
+		} catch (Exception e)
+		{
+		}
+		backButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		backButton.setLocation((getMult(0.5, Screen.width - backButton.getWidth())), getMult(0.7, Screen.height));
+		backButton.setBackground(elemCancel);
+		backButton.setButtonText("Back to Main Menu");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		backButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		backButton.setForeground(elemSecondary);
+		
+		backButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				win.setCurrentFrame(win.nameMap.get("main"));
+				win.displayCurrentFrame(true);
+			}
+			
+		});
+		
+		optionsFrame.add(backButton);
 		
 		win.addFrame(optionsFrame);
 	}
