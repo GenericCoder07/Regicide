@@ -15,7 +15,8 @@ public class UIButton extends JLabel
 {
 	private Color shadow;
 	private double buttonDeflection = 0;
-	private double desiredPosition = 1;
+	private double desiredPosition = 0;
+	private double currentPosition = 0;
 	private ActionListener listener;
 	private boolean hovering = false;
 	private double pressMult = 0.6;
@@ -35,7 +36,8 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
-				desiredPosition = 0;
+				currentPosition = desiredPosition;
+				desiredPosition = pressMult;
 				
 				a = new Animation(120) {
 
@@ -46,7 +48,7 @@ public class UIButton extends JLabel
 
 					public void action(double currTime)
 					{
-						buttonDeflection = getHeight() * .2 * (pressMult * (1- desiredPosition)) * currTime;
+						buttonDeflection = getHeight() * .2 * (desiredPosition - currentPosition) * currTime + getHeight() * .2 * currentPosition;
 						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
@@ -57,7 +59,20 @@ public class UIButton extends JLabel
 
 			public void mouseReleased(MouseEvent e)
 			{
-				desiredPosition = 1;
+				if(a != null)
+					a.stop();
+				
+				currentPosition = desiredPosition;
+				System.out.println("current pos " + currentPosition);
+				
+				if(!hovering)
+				{
+					desiredPosition = 0;
+				}
+				else {
+					desiredPosition = 0.3;
+				}
+				System.out.println("desired pos " + currentPosition);
 				
 				a = new Animation(240) {
 
@@ -68,7 +83,7 @@ public class UIButton extends JLabel
 
 					public void action(double currTime)
 					{
-						buttonDeflection = getHeight() * .2 * pressMult * currTime;
+						buttonDeflection = getHeight() * .2 * (currentPosition - desiredPosition) * currTime + getHeight() * .2 * desiredPosition;
 						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
@@ -79,10 +94,13 @@ public class UIButton extends JLabel
 				if(hovering)
 					doPress();
 			}
+			
+			float hoverDarkenMult = 0.9f;
 
 			public void mouseEntered(MouseEvent e)
 			{
-				desiredPosition = 0.7;
+				currentPosition = desiredPosition;
+				desiredPosition = 0.3;
 				
 				a = new Animation(120) {
 
@@ -93,7 +111,7 @@ public class UIButton extends JLabel
 
 					public void action(double currTime)
 					{
-						buttonDeflection = getHeight() * .2 * (pressMult * (1 - desiredPosition)) * currTime;
+						buttonDeflection = getHeight() * .2 * desiredPosition * currTime;
 						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
@@ -102,17 +120,16 @@ public class UIButton extends JLabel
 				a.start();
 				
 				float[] f = Color.RGBtoHSB(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), null);
-				setBackground(Color.getHSBColor(f[0], f[1], f[2] * 4 / 5));
+				setBackground(Color.getHSBColor(f[0], f[1], f[2] * hoverDarkenMult));
 				hovering = true;
 			}
 
 			public void mouseExited(MouseEvent e)
 			{
-				if(desiredPosition > 0.5)
+				currentPosition = desiredPosition;
+				if(desiredPosition > 0.1)
 				{	
-					System.out.println("I got here ");
-					
-					desiredPosition = 1;
+					desiredPosition = 0;
 				
 					a = new Animation(240) {
 	
@@ -123,7 +140,7 @@ public class UIButton extends JLabel
 	
 						public void action(double currTime)
 						{
-							buttonDeflection = getHeight() * .2 * (pressMult * (1- desiredPosition)) * currTime;
+							buttonDeflection = getHeight() * .2 * (currentPosition) * currTime;
 							System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 							repaint();
 						}
@@ -133,7 +150,7 @@ public class UIButton extends JLabel
 				}
 				
 				float[] f = Color.RGBtoHSB(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), null);
-				setBackground(Color.getHSBColor(f[0], f[1], f[2] * 5 / 4));
+				setBackground(Color.getHSBColor(f[0], f[1], f[2] * (1 / hoverDarkenMult)));
 				hovering = false;
 			}
         	
