@@ -49,7 +49,7 @@ public final class SoundPlayer implements AutoCloseable {
         }
     }
     private final Map<String, ClipPool> pools = new ConcurrentHashMap<>();
-    private final int poolSize = 16; // adjust per sound; 8–32 is typical
+    private int poolSize = 16; // adjust per sound; 8–32 is typical
     /** A handle to a currently playing sound instance */
     public static final class PlayHandle {
         private final Clip clip;
@@ -102,7 +102,8 @@ public final class SoundPlayer implements AutoCloseable {
      * @param mixer optional: choose a specific Mixer (AudioSystem.getMixerInfo) or null for default
      * @param forceStereo16 if true, convert all inputs to 44.1kHz, 16-bit, stereo for consistency
      */
-    public SoundPlayer(int maxParallelClips, Mixer mixer, boolean forceStereo16) {
+    public SoundPlayer(int poolSize, int maxParallelClips, Mixer mixer, boolean forceStereo16) {
+    	this.poolSize = poolSize;
         this.executor = new ThreadPoolExecutor(
                 Math.max(2, maxParallelClips),
                 Math.max(2, maxParallelClips),
@@ -118,7 +119,7 @@ public final class SoundPlayer implements AutoCloseable {
     }
 
     public SoundPlayer() {
-        this(32, null, true);
+        this(16, 32, null, true);
     }
 
     public SoundBuffer load(String keyOrPath) throws Exception {

@@ -43,7 +43,8 @@ public class Regicide
 	public static SoundPlayer.PlayHandle playMusicHandle;
 	public static GameWindow win;
 	
-	public static SoundPlayer sp = new SoundPlayer(32, null, true);
+	public static SoundPlayer sp = new SoundPlayer(3, 32, null, true);
+	public static SoundPlayer music = new SoundPlayer(1, 2, null, true);
 	
 	public static void main(String[] args)
 	{
@@ -71,9 +72,9 @@ public class Regicide
 			sp.load("sfx/press.wav");
 			sp.load("sfx/hover-press.wav");
 			sp.load("sfx/release.wav");
-			sp.load("sfx/background-music-track.wav");
-			sp.load("sfx/play-music-track.wav");
-			backgroundMusicHandle = sp.play("sfx/background-music-track.wav", 0.3,  0.0).get();
+			music.load("sfx/background-music-track.wav");
+			music.load("sfx/play-music-track.wav");
+			backgroundMusicHandle = music.play("sfx/background-music-track.wav", 0.3,  0.0).get();
 			
 		} 
 		catch (Exception e)
@@ -263,7 +264,7 @@ public class Regicide
 							
 						};
 						fade.start();
-						playMusicHandle = sp.play("sfx/play-music-track.wav", 0,  0.0).get();
+						playMusicHandle = music.play("sfx/play-music-track.wav", 0,  0.0).get();
 						Animation fadeIn = new Animation(1000)
 						{
 
