@@ -44,7 +44,9 @@ public class Regicide
 	public static GameWindow win;
 	
 	public static SoundPlayer sp = new SoundPlayer(3, 32, null, true);
-	public static SoundPlayer music = new SoundPlayer(1, 2, null, true);
+	public static SoundPlayer music = new SoundPlayer(2, 2, null, true);
+	
+	private static int fontSize = 40;
 	
 	public static void main(String[] args)
 	{
@@ -53,6 +55,7 @@ public class Regicide
 
 	private static void init()
 	{
+		fontSize = (int) Math.round(fontSize * (Screen.width / 2560.0));
 		Thread thread = new Thread(new Runnable() {
 
 			public void run()
@@ -73,9 +76,8 @@ public class Regicide
 			sp.load("sfx/hover-press.wav");
 			sp.load("sfx/release.wav");
 			music.load("sfx/background-music-track.wav");
-			music.load("sfx/play-music-track.wav");
 			backgroundMusicHandle = music.play("sfx/background-music-track.wav", 0.3,  0.0).get();
-			
+			music.load("sfx/play-music-track.wav");
 		} 
 		catch (Exception e)
 		{
@@ -127,7 +129,7 @@ public class Regicide
 		startButton.setBackground(elemPrimary);
 		startButton.setButtonText("Singleplayer");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		startButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		startButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		startButton.setForeground(elemSecondary);
 		
 		startButton.setActionListener(new ActionListener() {
@@ -155,7 +157,7 @@ public class Regicide
 		multiplayerButton.setBackground(elemTertiary);
 		multiplayerButton.setButtonText("Multiplayer");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		multiplayerButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		multiplayerButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		multiplayerButton.setForeground(elemSecondaryDark);
 		
 		titleFrame.add(multiplayerButton);
@@ -173,7 +175,7 @@ public class Regicide
 		optionsButton.setBackground(elemPrimary);
 		optionsButton.setButtonText("Options");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		optionsButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		optionsButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		optionsButton.setForeground(elemSecondary);
 		
 		optionsButton.setActionListener(new ActionListener() {
@@ -201,7 +203,7 @@ public class Regicide
 		quitButton.setBackground(elemCancel);
 		quitButton.setButtonText("Quit");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		quitButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		quitButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		quitButton.setForeground(elemSecondary);
 		
 		quitButton.setActionListener(new ActionListener() {
@@ -236,7 +238,7 @@ public class Regicide
 		newGameButton.setBackground(elemPrimary);
 		newGameButton.setButtonText("Start a New Game");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		newGameButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		newGameButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		newGameButton.setForeground(elemSecondary);
 		
 		newGameButton.setActionListener(new ActionListener() {
@@ -306,7 +308,7 @@ public class Regicide
 		tutorialButton.setBackground(elemPrimary);
 		tutorialButton.setButtonText("Tutorial");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		tutorialButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		tutorialButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		tutorialButton.setForeground(elemSecondary);
 		
 		tutorialButton.setActionListener(new ActionListener() {
@@ -334,7 +336,7 @@ public class Regicide
 		backButton.setBackground(elemCancel);
 		backButton.setButtonText("Back to Main Menu");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		backButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		backButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		backButton.setForeground(elemSecondary);
 		
 		backButton.setActionListener(new ActionListener() {
@@ -366,7 +368,7 @@ public class Regicide
 		muteMusicButton.setBackground(elemPrimary);
 		muteMusicButton.setButtonText("Mute Music");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		muteMusicButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		muteMusicButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		muteMusicButton.setForeground(elemSecondary);
 		
 		muteMusicButton.setActionListener(new ActionListener() {
@@ -376,13 +378,23 @@ public class Regicide
 				if(muteMusic)
 				{
 					muteMusicButton.setButtonText("Mute Music");
-					backgroundMusicHandle.setVolume(0.3);
+					try
+					{
+						backgroundMusicHandle = music.play("sfx/background-music-track.wav", 0.3, 0.0).get();
+					} catch (InterruptedException e1)
+					{
+					} catch (ExecutionException e1)
+					{
+					}
+					
 					muteMusic = false;
 				}
 				else 
 				{
 					muteMusicButton.setButtonText("Unmute Music");
+					backgroundMusicHandle.stop();
 					backgroundMusicHandle.setVolume(0);
+					backgroundMusicHandle.close();
 					muteMusic = true;
 				}
 				
@@ -399,7 +411,7 @@ public class Regicide
 		muteSFXButton.setBackground(elemPrimary);
 		muteSFXButton.setButtonText("Mute SFX");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		muteSFXButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		muteSFXButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		muteSFXButton.setForeground(elemSecondary);
 		
 		muteSFXButton.setActionListener(new ActionListener() {
@@ -437,7 +449,7 @@ public class Regicide
 		backButton.setBackground(elemCancel);
 		backButton.setButtonText("Back to Main Menu");
 		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
-		backButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		backButton.setFont(new Font("Verdana Bold", Font.BOLD, fontSize));
 		backButton.setForeground(elemSecondary);
 		
 		backButton.setActionListener(new ActionListener() {

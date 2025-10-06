@@ -17,7 +17,7 @@ public abstract class Animation
 
 			public void run()
 			{
-				System.out.println("Running Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
+				//System.out.println("Running Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
 
 				try
 				{
@@ -34,7 +34,7 @@ public abstract class Animation
 					{
 					}
 					action(function(currTime));
-					System.out.println("Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
+					//System.out.println("Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
 					currTime = (System.currentTimeMillis() - startms) * 1.0 / ms;
 				}
 				currTime = Double.NaN;
@@ -51,7 +51,7 @@ public abstract class Animation
 		currTime = newTime;
 		startms = (long) (System.currentTimeMillis() - ms*currTime);
 		
-		System.out.println("Running Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
+		//System.out.println("Running Thread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
 		
 		runThread = new Thread(new Runnable() {
 
@@ -68,7 +68,7 @@ public abstract class Animation
 					action(function(clamp(currTime, 0, 1)));
 					currTime = ms * 1.0 / (System.currentTimeMillis() - startms);
 				}
-				System.out.println("\nThread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
+				//System.out.println("\nThread:\n\t-currTime:" + currTime + "\n\t-startms:" + startms + "\n\t-ms" + ms + "\n\t-sysTime:" + System.currentTimeMillis());
 				if(!stop)
 					currTime = Double.NaN;
 			}

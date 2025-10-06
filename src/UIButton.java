@@ -55,7 +55,7 @@ public class UIButton extends JLabel
 					public void action(double currTime)
 					{
 						buttonDeflection = getHeight() * .2 * (desiredPosition - currentPosition) * currTime + getHeight() * .2 * currentPosition;
-						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+						//System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
 					
@@ -74,7 +74,7 @@ public class UIButton extends JLabel
 					Regicide.sp.play("sfx/release.wav", 0.9,  0.0);
 	            
 				currentPosition = desiredPosition;
-				System.out.println("current pos " + currentPosition);
+				//System.out.println("current pos " + currentPosition);
 				
 				if(!hovering)
 				{
@@ -83,7 +83,7 @@ public class UIButton extends JLabel
 				else {
 					desiredPosition = 0.3;
 				}
-				System.out.println("desired pos " + currentPosition);
+				//System.out.println("desired pos " + currentPosition);
 				
 				a = new Animation(240) {
 
@@ -95,7 +95,7 @@ public class UIButton extends JLabel
 					public void action(double currTime)
 					{
 						buttonDeflection = getHeight() * .2 * (currentPosition - desiredPosition) * currTime + getHeight() * .2 * desiredPosition;
-						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+						//System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
 					
@@ -126,7 +126,7 @@ public class UIButton extends JLabel
 					public void action(double currTime)
 					{
 						buttonDeflection = getHeight() * .2 * desiredPosition * currTime;
-						System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+						//System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 						repaint();
 					}
 					
@@ -163,7 +163,7 @@ public class UIButton extends JLabel
 						public void action(double currTime)
 						{
 							buttonDeflection = getHeight() * .2 * (currentPosition) * currTime;
-							System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
+							//System.out.println("def - " + buttonDeflection + "\ncurrTime - " + currTime + "\n");
 							repaint();
 						}
 						
