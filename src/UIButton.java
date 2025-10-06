@@ -19,9 +19,10 @@ public class UIButton extends JLabel
 	private double currentPosition = 0;
 	private ActionListener listener;
 	private boolean hovering = false;
+	private boolean pressed = false;
 	private double pressMult = 0.6;
 	private Animation a;
-	public UIButton(Color shadow) throws Exception
+	public UIButton(Color shadow)
 	{
 		setOpaque(false); 
         setHorizontalAlignment(SwingConstants.CENTER);
@@ -36,7 +37,10 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
-	            Regicide.sp.play("sfx/press.wav", 0.9,  0.0);
+				pressed = true;
+				
+				if(!Regicide.muteSFX)
+					Regicide.sp.play("sfx/press.wav", 0.9,  0.0);
 				
 				currentPosition = desiredPosition;
 				desiredPosition = pressMult;
@@ -64,7 +68,10 @@ public class UIButton extends JLabel
 				if(a != null)
 					a.stop();
 				
-	            Regicide.sp.play("sfx/release.wav", 0.9,  0.0);
+				pressed = false;
+				
+				if(!Regicide.muteSFX)
+					Regicide.sp.play("sfx/release.wav", 0.9,  0.0);
 	            
 				currentPosition = desiredPosition;
 				System.out.println("current pos " + currentPosition);
@@ -105,7 +112,9 @@ public class UIButton extends JLabel
 			{
 				currentPosition = desiredPosition;
 				desiredPosition = 0.3;
-	            Regicide.sp.play("sfx/hover-press.wav", 0.9,  0.0);
+				
+				if(!Regicide.muteSFX)
+					Regicide.sp.play("sfx/hover-press.wav", 0.9,  0.0);
 				
 				a = new Animation(120) {
 
@@ -131,6 +140,14 @@ public class UIButton extends JLabel
 
 			public void mouseExited(MouseEvent e)
 			{
+				if(pressed)
+				{
+					float[] f = Color.RGBtoHSB(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), null);
+					setBackground(Color.getHSBColor(f[0], f[1], f[2] * (1 / hoverDarkenMult)));
+					hovering = false;
+					return;
+				}
+				
 				currentPosition = desiredPosition;
 				if(desiredPosition > 0.1)
 				{	

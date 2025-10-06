@@ -1,3 +1,8 @@
+/*
+ * Code generated entirely with ChatGPT 5
+ * I aint doin that audio crap lol
+ */
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -23,6 +28,9 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.Mixer;
+
+
+
 
 /**
  * SoundPlayer: caches decoded PCM audio and plays multiple Clips concurrently.

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -36,8 +37,10 @@ public class Regicide
 	private static Color elemTertiary = Color.getHSBColor(0.125f, 0.25f, 0.95f);
 	private static Color elemTertiaryDark = Color.getHSBColor(0.125f, 0.25f, 0.65f);
 	
+	public static boolean muteMusic, muteSFX;
 	public static Color bg = Color.getHSBColor(0.65f, 0.85f, 0.30f);
-	
+	public static SoundPlayer.PlayHandle backgroundMusicHandle;
+	public static SoundPlayer.PlayHandle playMusicHandle;
 	public static GameWindow win;
 	
 	public static SoundPlayer sp = new SoundPlayer(32, null, true);
@@ -49,8 +52,16 @@ public class Regicide
 
 	private static void init()
 	{
+		Thread thread = new Thread(new Runnable() {
+
+			public void run()
+			{
+				initSoundPlayer();
+			}
+			
+		});
+		thread.start();
 		initWindow();
-		initSoundPlayer();
 	}
 
 	private static void initSoundPlayer()
@@ -60,6 +71,10 @@ public class Regicide
 			sp.load("sfx/press.wav");
 			sp.load("sfx/hover-press.wav");
 			sp.load("sfx/release.wav");
+			sp.load("sfx/background-music-track.wav");
+			sp.load("sfx/play-music-track.wav");
+			backgroundMusicHandle = sp.play("sfx/background-music-track.wav", 0.3,  0.0).get();
+			
 		} 
 		catch (Exception e)
 		{
@@ -81,6 +96,7 @@ public class Regicide
 		createTitleFrame();
 		createSinglePlayerFrame();
 		createOptionsFrame();
+		createNewGameFrame();
 	}
 	
 	private static void createTitleFrame()
@@ -226,8 +242,50 @@ public class Regicide
 
 			public void actionPerformed(ActionEvent e)
 			{
-				//win.setCurrentFrame(win.nameMap.get("singleplayer"));
-				//win.displayCurrentFrame();
+				win.setCurrentFrame(win.nameMap.get("newgame"));
+				win.displayCurrentFrame(true);
+				try
+				{
+					if(!muteMusic)
+					{
+						Animation fade = new Animation(1000)
+						{
+
+							public double function(double currTime)
+							{
+								return currTime;
+							}
+
+							public void action(double currTime)
+							{
+								backgroundMusicHandle.setVolume(0.3 * (1 - currTime));
+							}
+							
+						};
+						fade.start();
+						playMusicHandle = sp.play("sfx/play-music-track.wav", 0,  0.0).get();
+						Animation fadeIn = new Animation(1000)
+						{
+
+							public double function(double currTime)
+							{
+								return currTime;
+							}
+
+							public void action(double currTime)
+							{
+								playMusicHandle.setVolume(0.3 * (currTime));
+							}
+							
+						};
+						fadeIn.start();
+						
+					}
+				} catch (InterruptedException e1)
+				{
+				} catch (ExecutionException e1)
+				{
+				}
 			}
 			
 		});
@@ -300,6 +358,72 @@ public class Regicide
 		
 		optionsFrame.getContentPane().setBackground(bg);
 		
+		
+		UIButton muteMusicButton = new UIButton(elemPrimaryDark);
+		muteMusicButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		muteMusicButton.setLocation((getMult(0.65, Screen.width - muteMusicButton.getWidth())), getMult(0.45, Screen.height));
+		muteMusicButton.setBackground(elemPrimary);
+		muteMusicButton.setButtonText("Mute Music");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		muteMusicButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		muteMusicButton.setForeground(elemSecondary);
+		
+		muteMusicButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if(muteMusic)
+				{
+					muteMusicButton.setButtonText("Mute Music");
+					backgroundMusicHandle.setVolume(0.3);
+					muteMusic = false;
+				}
+				else 
+				{
+					muteMusicButton.setButtonText("Unmute Music");
+					backgroundMusicHandle.setVolume(0);
+					muteMusic = true;
+				}
+				
+			}
+			
+		});
+		
+		optionsFrame.add(muteMusicButton);
+		
+		
+		UIButton muteSFXButton = new UIButton(elemPrimaryDark);
+		muteSFXButton.setSize(getMult(0.20, Screen.width), getMult(0.20 * 0.3, Screen.width));
+		muteSFXButton.setLocation((getMult(0.35, Screen.width - muteSFXButton.getWidth())), getMult(0.45, Screen.height));
+		muteSFXButton.setBackground(elemPrimary);
+		muteSFXButton.setButtonText("Mute SFX");
+		System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()));
+		muteSFXButton.setFont(new Font("Verdana Bold", Font.BOLD, 40));
+		muteSFXButton.setForeground(elemSecondary);
+		
+		muteSFXButton.setActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if(muteSFX)
+				{
+					muteSFXButton.setButtonText("Mute SFX");
+					//backgroundMusicHandle.setVolume(0.3);
+					muteSFX = false;
+				}
+				else 
+				{
+					muteSFXButton.setButtonText("Unmute SFX");
+					//backgroundMusicHandle.setVolume(0);
+					muteSFX = true;
+				}
+			}
+			
+		});
+		
+		optionsFrame.add(muteSFXButton);
+		
+		
 		UIButton backButton = null;
 		try
 		{
@@ -328,6 +452,17 @@ public class Regicide
 		optionsFrame.add(backButton);
 		
 		win.addFrame(optionsFrame);
+	}
+	
+	private static void createNewGameFrame()
+	{
+		GameFrame newGameFrame = new GameFrame("newgame");
+		
+		newGameFrame.getContentPane().setBackground(bg);
+		
+		
+		
+		win.addFrame(newGameFrame);
 	}
 
 	private static Image getAsset(String filePath)
